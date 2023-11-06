@@ -6,8 +6,11 @@ const router = new Router();
 
 // Set up "/all" route
 router.get("/all", async function (req,res) {
+    // Parse "useCache" query param
+    const useCache = (["true","1"].some(v=>v==req.query?.cache?.toLowerCase())) || true;
+
     // Get book reviews using the BookReviews service
-    const bookReviews = await BookReviewService.getBookReviews();
+    const bookReviews = await BookReviewService.getBookReviews(useCache);
 
     // Return the book reviews
     res.json(bookReviews);

@@ -13,6 +13,10 @@ import bookReviewRouter from "./routers/book-review.mjs";
 // Set up BookReview service endpoints
 app.use("/bookreviews", bookReviewRouter);
 
+app.use("*", function(req,res){
+    res.send("Available endpoints:</br>/health</br>/bookreviews");
+})
+
 // Get port
 const PORT = process.env.PORT || 3000;
 

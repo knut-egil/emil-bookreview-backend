@@ -9,16 +9,25 @@ router.get("/all", async function (req, res) {
     // Parse "useCache" query param
     const useCache = (["true","1"].some(v=>v==req.query?.cache?.toLowerCase())) || true;
 
-    // Get book reviews using the BookReviews service
-    const bookReviews = await BookReviewService.getBookReviews(useCache);
+    try {
+        // Get book reviews using the BookReviews service
+        const bookReviews = await BookReviewService.getBookReviews(useCache);
 
-    // Return the book reviews
-    res.json(bookReviews);
+        // Return the book reviews
+        res.json(bookReviews);
+    }
+    catch(err) {
+        console.error(err);
+        res.status(500).json({
+            error: `${err?.stack || err.toString()}`
+        });
+    }
 });
 
 // Start bookreviews refresh/fetch task
 const bookReviewsTask = {
     promise: null,
+    result: null,
     startTimestamp: null,
     finishTimestamp: null
 };
@@ -38,6 +47,9 @@ router.get("/refresh", async function (req, res) {
     // Return
     res.json({
         state: taskState,
+        task: {
+            ...bookReviewsTask
+        }
     })
 });
 // Start bookReviews refresh task
@@ -55,11 +67,20 @@ router.put("/refresh", async function (req, res) {
     // Initiate BookReviewService.getBookReviews
     const getBookReviewsPromise = BookReviewService.getBookReviews(false);;
     bookReviewsTask.promise = getBookReviewsPromise;
+    bookReviewsTask.result = null;
     bookReviewsTask.startTimestamp = Date.now();
     bookReviewsTask.finishTimestamp = null;
 
     // Set finish timestamp on finally
-    getBookReviewsPromise.finally(function() {
+    getBookReviewsPromise.then((data) => {
+        bookReviewsTask.result = {
+            data: data
+        }
+    }).catch((err) => {
+        bookReviewsTask.result = {
+            error: err?.stack || err.toString()
+        }
+    }).finally(() => {
         bookReviewsTask.finishTimestamp = Date.now();
     });
 

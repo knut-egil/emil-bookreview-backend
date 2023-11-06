@@ -42,7 +42,7 @@ router.get("/refresh", async function (req, res) {
 });
 // Start bookReviews refresh task
 router.put("/refresh", async function (req, res) {
-    const taskState = promiseState(bookReviewsTask.promise);
+    const taskState = await promiseState(bookReviewsTask.promise);
     if (taskState == "pending") {
         return res.status(409)
         .json({

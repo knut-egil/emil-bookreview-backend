@@ -1,5 +1,5 @@
 import { Router} from "express";
-import BookReviewService from "../services/book-review";
+import BookReviewService from "../services/book-review.mjs";
 
 // New express router
 const router = new Router();

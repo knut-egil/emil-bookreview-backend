@@ -9,7 +9,7 @@ app.get("/health", function(req,res){
 });
 
 // Import routers
-import bookReviewRouter from "./routers/book-review"; 
+import bookReviewRouter from "./routers/book-review.mjs"; 
 // Set up BookReview service endpoints
 app.use("/bookreviews", bookReviewRouter);
 

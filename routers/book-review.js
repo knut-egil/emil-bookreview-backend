@@ -11,6 +11,6 @@ router.get("all", async function (req,res) {
 
     // Return the book reviews
     res.json(bookReviews);
-})
+});
 
 export default router;

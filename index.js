@@ -1,7 +1,11 @@
 import express from "express";
+import cors from "cors";
 
 // Set up express app
 const app = new express();
+
+// Set up middleware
+app.use(cors());
 
 // Health-check route
 app.get("/health", function(req,res){

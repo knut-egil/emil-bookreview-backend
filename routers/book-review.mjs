@@ -33,7 +33,7 @@ function promiseState(p) {
 // Get bookReviews refresh task status
 router.get("/refresh", async function (req, res) {
     // Check current promise state
-    const taskState = promiseState(bookReviewsTask.promise);
+    const taskState = await promiseState(bookReviewsTask.promise);
 
     // Return
     res.json({
